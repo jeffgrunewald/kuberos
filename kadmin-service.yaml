@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kadmin
+  labels:
+    component: kdc
+spec:
+  type: NodePort
+  ports:
+    - port: 749
+      targetPort: kadmin-tcp
+      protocol: TCP
+      name: kadmin-tcp
+    - port: 749
+      targetPort: kadmin-udp
+      protocol: UDP
+      name: kadmin-udp
+  selector:
+    component: kdc

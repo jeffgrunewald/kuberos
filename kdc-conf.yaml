@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kdc-config
+  labels:
+    component: kdc
+data:
+  kdc.conf: |-
+    [kdcdefaults]
+     kdc_ports = 88
+     kdc_tcp_ports = 88
+     restrict_anonymous_to_tgt = true
+     spake_preauth_kdc_challenge = edwards25519
+
+    [realms]
+     FOO.COM = {
+      master_key_type = aes256-cts
+      max_life = 7d
+      max_renewable_life = 14d
+      acl_file = /var/kerberos/krb5kdc/kadm5.acl
+      dict_file = /usr/share/dict/cracklib-words
+      ; default_principal_flags = +preauth
+      ;  admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab
+      ;  pkinit_identity = FILE:/var/kerberos/krb5kdc/kdc.crt,/var/kerberos/krb5kdc/kdc.key
+      ;  pkinit_anchors = FILE:/var/kerberos/krb5kdc/kdc.crt
+      ;  pkinit_anchors = FILE:/var/kerberos/krb5kdc/cacert.pem
+      ;  pkinit_pool = FILE:/var/lib/ipa-client/pki/ca-bundle.pem
+     }
+
+  kadm5.acl: |-
+    */admin@FOO.COM        *
+    */nomin@FOO.COM ADMCIL
+
