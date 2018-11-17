@@ -17,13 +17,22 @@ data:
      spake_preauth_kdc_challenge = {{ .Values.kdc.preauth_challenge }}
 
     [realms]
-{{- range $key, $value := .Values.kdc.realms }}
-     {{ $key }} = {
-{{ $value | indent 6 }}
+{{- range $key, $value := .Values.realms }}
+     {{ $key | upper }} = {
+      master_key_type = {{ $value.master_key_type }}
+      max_life = {{ $value.max_life }}
+      max_renewable_life = {{ $value.max_renew_life }}
+      acl_file = {{ $value.acl_file_path }}
+      dict_file = /usr/share/dict/cracklib-words
+{{- if $value.kdc_extra_configs }}
+{{ $value.kdc_extra_configs | trim | indent 6 }}
+{{- end }}
      }
 {{- end }}
 
   kadm5.acl: |-
-{{- if .Values.kadmin.acls }}
-{{ .Values.kadmin.acls | indent 4 }}
+{{- range $key, $value := .Values.realms }}
+{{- range $acl := $value.acls }}
+    {{ $acl.princ }}@{{ $key | upper }}   {{ $acl.perms }}   {{ if $acl.target }}{{ $acl.target }}{{ end }}   {{ if $acl.restrictions }}{{ $acl.restrictions }}{{ end }}
+{{- end }}
 {{- end }}

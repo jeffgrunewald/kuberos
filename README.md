@@ -1,1 +1,1 @@
-# A Helm-packaged deployment of a Kerberos v5 KDC stack to Kubernetes
+# A Helm chart of a Kerberos v5 KDC stack to Kubernetes

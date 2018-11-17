@@ -2,7 +2,7 @@ serviceAccount:
   create: true
 
 krb5:
-  default_realm: EXAMPLE.COM
+  default_realm: example.com
   lookup_realm: false
   lookup_kdc: true
   rdns: false
@@ -10,15 +10,34 @@ krb5:
   forwardable: true
   default_ccache: /tmp/krb5kdc_%{uid}
   enc_types: >-
-   aes256-cts-hmac-sha1-96
-   aes256-cts-hmac-sha384-192
-   camellia256-cts-cmac
-   aes128-cts-hmac-sha1-96
-   aes128-cts-hmac-sha256-128
-   camellia128-cts-cmac
-  realms:
-    EXAMPLE.COM: |-
-      
+    aes256-cts-hmac-sha1-96
+    aes256-cts-hmac-sha384-192
+    camellia256-cts-cmac
+    aes128-cts-hmac-sha1-96
+    aes128-cts-hmac-sha256-128
+    camellia128-cts-cmac
+
+realms:
+  example.com:
+    master_key_type: aes256-cts
+    max_life: 7d
+    max_renew_life: 14d
+    acl_file: /var/kerberos/krb5kdc/kadm5.acl
+    acls:
+    - princ: "*/admin"
+      perms: "*"
+      restrictions: "-max -postdateable"
+    kdc_extra_configs: |-
+      ; default_principal_flags = +preauth
+      ; admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab
+      ; pkinit_identity = FILE:/var/kerberos/krb5kdc/kdc.crt,/var/kerberos/krb5kdc/kdc.key
+      ; pkinit_anchors = FILE:/var/kerberos/krb5kdc/kdc.crt
+      ; pkinit_anchors = FILE:/var/kerberos/krb5kdc/cacert.pem
+      ; pkinit_pool = FILE:/var/lib/ipa-client/pki/ca-bundle.pem
+    krb5_extra_configs: |-
+      ; pkinit_anchors = FILE:/path/to/kdc-ca-bundle.pem
+      ; pkinit_pool = FILE:/path/to/ca-bundle.pem
+    extra_domains: []
 
 kdc:
   service: NodePort
@@ -30,19 +49,6 @@ kdc:
     name: kdc-tcp
   restrict_anonymous: true
   preauth_challenge: edwards25519
-  realms:
-    EXAMPLE.COM: |-
-      master_key_type = aes256-cts
-      max_life = 7d
-      max_renewable_life = 14d
-      acl_file = /var/kerberos/krb5kdc/kadm5.acl
-      dict_file = /usr/share/dict/cracklib-words
-      ; default_principal_flags = +preauth
-      ; admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab
-      ; pkinit_identity = FILE:/var/kerberos/krb5kdc/kdc.crt,/var/kerberos/krb5kdc/kdc.key
-      ; pkinit_anchors = FILE:/var/kerberos/krb5kdc/kdc.crt
-      ; pkinit_anchors = FILE:/var/kerberos/krb5kdc/cacert.pem
-      ; pkinit_pool = FILE:/var/lib/ipa-client/pki/ca-bundle.pem
 
 kadmin:
   service: NodePort
@@ -52,5 +58,3 @@ kadmin:
   tcp:
     port: 749
     name: kadmin-tcp
-  acls: |-
-    */admin@EXAMPLE.COM      *
