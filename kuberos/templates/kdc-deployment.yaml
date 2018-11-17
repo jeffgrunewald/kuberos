@@ -22,7 +22,7 @@ spec:
       serviceAccountName: kerberos-admin
       initContainers:
       - name: kdb5-util
-        image: jeffgrunewald/kuberos:centos
+        image: jeffgrunewald/kuberos:1.1
         imagePullPolicy: IfNotPresent
         command:
         - /init_db
@@ -40,7 +40,7 @@ spec:
       containers:
       - name: kdc
         resources: {}
-        image: jeffgrunewald/kuberos:centos
+        image: jeffgrunewald/kuberos:1.1
         imagePullPolicy: IfNotPresent
         command:
         - /usr/sbin/krb5kdc
@@ -73,7 +73,7 @@ spec:
           name: kdc-db
       - name: kadmin
         resources: {}
-        image: jeffgrunewald/kuberos:centos
+        image: jeffgrunewald/kuberos:1.1
         imagePullPolicy: IfNotPresent
         command:
         - /usr/sbin/kadmind

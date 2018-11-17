@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kerberos.fullname" }}-kdc-config
+  labels:
+    app: {{ template "kerberos.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    component: kdc
+data:
+  kdc.conf: |-
+    [kdcdefaults]
+     kdc_ports = {{ .Values.kdc.udp.port }}
+     kdc_tcp_ports = {{ .Values.kdc.tcp.port }}
+     restrict_anonymous_to_tgt = {{ .Values.kdc.restrict_anonymous }}
+     spake_preauth_kdc_challenge = {{ .Values.kdc.preauth_challenge }}
+
+    [realms]
+{{- range $key, $value := .Values.kdc.realms }}
+     {{ $key }} = {
+{{ $value | indent 6 }}
+     }
+{{- end }}
+
+  kadm5.acl: |-
+{{- if .Values.kadmin.acls }}
+{{ .Values.kadmin.acls | indent 4 }}
+{{- end }}

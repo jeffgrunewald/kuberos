@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kerberos.fullname" }}-krb5-config
+  labels:
+    app: {{ template "kerberos.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    component: krb5
+data:
+  krb5.conf: |-
+    [logging]
+     default = CONSOLE
+     kdc = CONSOLE
+     admin_server = CONSOLE
+
+    [libdefaults]
+     default_realm = {{ .Values.default_realm }}
+     dns_lookup_realm = {{ .Values.krb5.lookup_realm }}
+     dns_lookup_kdc = {{ .Values.krb5.lookup_kdc }}
+     rdns = {{ .Values.krb5.rdns }}
+     ticket_lifetime = {{ .Values.krb5.ticket_lifetime }}
+     forwardable = {{ .Values.krb5.forwardable }}
+     udp_preference_limit = 0
+     default_ccache_name = {{ .Values.krb5.default_ccache }}
+     permitted_enctypes = {{ .Values.krb5.enc_types }}
+
+    [realms]
+{{- range $key, $value := .Values.krb5.realms }}
+     FOO.COM = {
+      kdc = kdc.default.svc.cluster.local:88
+      master_kdc = kdc.default.svc.cluster.local:88
+      admin_server = kadmin.default.svc.cluster.local:749
+      default_domain = cluster.local
+     ; pkinit_anchors = FILE:/path/to/kdc-ca-bundle.pem
+     ; pkinit_pool = FILE:/path/to/ca-bundle.pem
+     }
+{{- end }}
+
+    [domain_realm]
+     .cluster.local = FOO.COM
+     foo.com = FOO.COM
