@@ -1,6 +1,10 @@
 serviceAccount:
   create: true
 
+containers:
+  tag: 1.1
+  pullPolicy: IfNotPresent
+
 krb5:
   default_realm: example.com
   lookup_realm: false
@@ -49,6 +53,11 @@ kdc:
     name: kdc-tcp
   restrict_anonymous: true
   preauth_challenge: edwards25519
+  persistence:
+    enabled: true
+    name: kerberos-db
+    storageClass: standard
+    size: 1Gi
 
 kadmin:
   service: NodePort
