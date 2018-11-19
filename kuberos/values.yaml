@@ -58,6 +58,8 @@ kdc:
     name: kerberos-db
     storageClass: standard
     size: 1Gi
+  # Explicitly define kdc db master password, else 40 char random string generated
+  # password: password123
 
 kadmin:
   service: NodePort

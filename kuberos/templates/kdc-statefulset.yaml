@@ -47,7 +47,10 @@ spec:
         - name: REALM
           value: {{ .Values.krb5.default_realm | upper }}
         - name: MASTER_PASSWORD
-          value: password123
+          valueFrom:
+            secretRefKey:
+              name: {{ template "kerberos.fullname" }}
+              key: master-password
         volumeMounts:
         - mountPath: /var/kerberos/krb5kdc
           name: {{ .Values.kdc.persistence.name }}
@@ -87,7 +90,7 @@ spec:
           name: {{ .Values.kdc.persistence.name }}
       - name: kadmin
         resources: {}
-        image: jeffgrunewald/kuberos:1.1
+        image: jeffgrunewald/kuberos:{{ .Values.containers.tag }}
         imagePullPolicy: IfNotPresent
         command:
         - /usr/sbin/kadmind
