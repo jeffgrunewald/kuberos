@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "kerberos.fullname" }}-kdc-config
+  name: {{ template "kerberos.fullname" . }}-kdc-config
   labels:
     app: {{ template "kerberos.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -22,7 +22,7 @@ data:
       master_key_type = {{ $value.master_key_type }}
       max_life = {{ $value.max_life }}
       max_renewable_life = {{ $value.max_renew_life }}
-      acl_file = {{ $value.acl_file_path }}
+      acl_file = {{ $value.acl_file }}
       dict_file = /usr/share/dict/cracklib-words
 {{- if $value.kdc_extra_configs }}
 {{ $value.kdc_extra_configs | trim | indent 6 }}

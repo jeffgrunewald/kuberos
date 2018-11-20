@@ -6,8 +6,8 @@ ARG krb5_version=1.15.1-19.el7
 
 RUN yum -y --setopt=tsflags=nodocs update \
  && yum -y --setopt=tsflags=nodocs install \
-    cracklib-dicts-${dict_version}} \
-    expect-${expect_version}} \
+    cracklib-dicts-${dict_version} \
+    expect-${expect_version} \
     krb5-libs-${krb5_version} \
     krb5-pkinit-${krb5_version} \
     krb5-server-${krb5_version} \

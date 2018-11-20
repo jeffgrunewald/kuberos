@@ -1,12 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "kerberos.fullname" }}-kdc
+  name: {{ template "kerberos.fullname" . }}-kdc
   labels:
     app: {{ template "kerberos.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
+spec:
   type: {{ .Values.kdc.service }}
   ports:
     - port: {{ .Values.kdc.udp.port }}

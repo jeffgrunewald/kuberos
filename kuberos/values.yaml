@@ -69,3 +69,7 @@ kadmin:
   tcp:
     port: 749
     name: kadmin-tcp
+
+admin_princ:
+  name: ""
+  password: ""
