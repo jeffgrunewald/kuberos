@@ -30,7 +30,6 @@ realms:
     acls:
     - princ: "*/admin"
       perms: "*"
-      restrictions: "-max -postdateable"
     kdc_extra_configs: |-
       ; default_principal_flags = +preauth
       ; admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab

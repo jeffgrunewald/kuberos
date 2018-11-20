@@ -35,4 +35,4 @@ data:
 {{- range $acl := $value.acls }}
     {{ $acl.princ }}@{{ $key | upper }}   {{ $acl.perms }}   {{ if $acl.target }}{{ $acl.target }}{{ end }}   {{ if $acl.restrictions }}{{ $acl.restrictions }}{{ end }}
 {{- end }}
-{{- end }}
+{{ end }}
